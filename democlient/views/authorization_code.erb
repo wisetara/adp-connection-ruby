@@ -1,0 +1,90 @@
+<div>
+  <p>
+    <strong>Authorization </strong><br/>
+    <a href="/client_credentials" style="width:185px;height:32px;display:inline-block;background-color:#ccc;padding:10px 10px 10px 5px;text-align: center;vertical-align: middle;">Client Credential</a>  &nbsp; &nbsp;
+    <span href="authorization_code" style="width:185px;height:32px;display:inline-block;background-color:#ccc;padding:10px 10px 10px 5px;text-align: center;vertical-align: middle;">Authentication Code</span>
+  </p>
+</div>
+
+<div class="content">
+  <ol>
+    <li><b>1.</b>
+      <% if session["AuthorizationCode"].nil? %>
+          <a href="/authorization_code/login">Login</a>
+        <% else %>
+        <a>Loged in</a>
+      <% end %>
+    <br/>
+    <code>
+<pre>
+authorizationcode_config = AuthorizationCodeConfiguration.new(config);
+connection = ADPApiConnectionFactory::createConnection(authorizationcode_config)
+authorizationurl = connection.get_authorization_url
+redirect authorizationurl unless authorizationurl.nil?
+</pre>
+    </code>
+    </li>
+    <br/>
+    <li><b>2.</b>
+      <% if session["AuthorizationCode"].nil? || session["AuthorizationCode"].connection_configuration.authorizationCode.nil? %>
+          <a>Get Token</a>
+      <% else %>
+          <a href="/authorization_code/get_token">Get Token</a>
+      <% end %>
+      <br/>
+      <code>
+<pre>
+#store callback code
+connection.connection_configuration.authorizationCode = params[:code]
+#then connect
+connection.connect()
+</pre>
+      </code>
+    </li>
+
+    <% if !(session["AuthorizationCode"].nil? || session["AuthorizationCode"].connection_configuration.authorizationCode.nil?) %>
+
+        <li><b>4.</b>
+          <a href="/authorization_code/logout">Logout</a>
+          <code>
+
+            connection.logout()
+
+          </code>
+        </li>
+    <% end %>
+
+  </ol>
+
+</div>
+
+<div class="sidebar">
+  <h3>Results...</h3>
+  <ul>
+    <!--
+    <li><b>Ruby:</b> <%= RUBY_VERSION %></li>
+    <li><b>Environment:</b> <%= ENV["RACK_ENV"] %></li>
+    <li><b>Server:</b> <%= @env["SERVER_SOFTWARE"] %></li>
+    <li><b>Port:</b> <%= @env["SERVER_PORT"] %></li>
+    -->
+    <% if session["AuthorizationCode"].nil?  %>
+        <li><b>Access token:</b> not logged in</li>
+        <li>&nbsp;</li>
+        <li>&nbsp;</li>
+        <li>&nbsp;</li>
+        <li>&nbsp;</li>
+    <% else %>
+        <li><b>Authorization code:</b> <%= session["AuthorizationCode"].connection_configuration.authorizationCode %> </li>
+        <% unless session["AuthorizationCode"].access_token.nil? %>
+            <li><b>Access token:</b> <%= session["AuthorizationCode"].access_token.token %> </li>
+            <li><b>Token type:</b> <%= session["AuthorizationCode"].access_token.token_type %> </li>
+            <li><b>Expires in:</b> <%= session["AuthorizationCode"].access_token.expires_in %> </li>
+            <li><b>Scope:</b> <%= session["AuthorizationCode"].access_token.scope %> </li>
+            <li><b>Expires on:</b> <%= session["AuthorizationCode"].access_token.expires_on %> </li>
+        <% end %>
+    <% end %>
+  </ul>
+  <div class="results_footer" style="">
+    <a href="https://github.com/adplabs/adp-connection-ruby"><img class="sidebar_logo" src="/images/ADP_logo_tagline.png" alt="Marketplace/Ruby/Library" /></a>
+  </div>
+</div>
