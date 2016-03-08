@@ -1,9 +1,54 @@
 # ADP Connection Client Library for Ruby
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/adp/connection`. To experiment with that code, run `bin/console` for an interactive prompt.
+The ADP Client Connection Library is intended to simplify and aid the process of authenticating, authorizing and connecting to the ADP Marketplace API Gateway. The Library includes a sample application that can be run out-of-the-box to connect to the ADP Marketplace API **test** gateway.
+
+### Version
+1.0.0 (Beta)
 
 
 ## Installation
+
+There are two ways of installing and using this library:
+
+  - Clone the repo from Github: This allows you to access the raw source code of the library as well as provide the ability to run the sample demo client application and view the Library documentation
+  - Install gem from RubyGems.org(https://rubygems.org/gems/adp-connection): When you are ready to use the library in your own application use this method to install it using gem/bundle
+
+
+**Clone from Github**
+
+You can either use the links on Github or the command line git instructions below to clone the repo.
+
+```sh
+
+$ git clone https://github.com/adplabs/adp-connection-ruby.git adp-connection-ruby
+
+```
+
+followed by
+
+```sh
+
+$ cd adp-connection-ruby
+$ rake -T
+$ rake install:local
+
+```
+
+*Run the sample demo client app*
+
+```sh
+
+$ cd ./democlient
+$ rackup
+
+```
+
+This starts an HTTP server on port 8889 (this port must be unused to run the sample application). You can point your browser to http://localhost:8889. The sample app allows you to connect to the ADP test API Gateway using the **client_credentials** and **authorization_code** grant types. For the **authorization_code** connection, you will be asked to provide an ADP username (MKPLDEMO) and password (marketplace1).
+
+***
+
+
+**Clone from Github**
 
 Add this line to your application's Gemfile:
 
@@ -46,6 +91,81 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 A demo client is included that uses the adp-connection gem. Check it out.
+
+
+## Examples
+### Create Client Credentials ADP Connection
+
+Here is a Sinatra (http://www.sinatrarb.com/) example
+
+```ruby
+
+require 'yaml'
+require 'tilt/erb'
+require 'logger'
+require 'adp/connection'
+
+clientcredential_config = YAML.load(ERB.new(File.read('config/clientcredential_config.yml')).result)
+authorizationcode_config = YAML.load(ERB.new(File.read('config/authorizationcode_config.yml')).result)
+
+configure do
+  Log = Logger.new(STDOUT);
+  #Logger.new("sinatra.log")
+  Log.level  = Logger::DEBUG
+end
+
+class AdpConnectionRuby < Sinatra::Base
+
+  enable :sessions
+  set :public_folder => "public", :static => true
+
+  #set :protection, :session => true
+  set :port, 8889
+
+  results = {
+      :message =>  "Welcome",
+      :auth_type => nil
+  }
+
+  get '/client_credentials/login' do
+    results[:auth_type] = :client_credentials
+    results[:message] = nil
+    connection = session["ClientCredential"]
+    results[:userinfo] = nil
+
+    if (connection.nil?)
+
+      # get new connection configuration
+      # YAML config object placed in yaml configuration files
+      config = YAML.load_file('config/clientcredential_config.yml');
+
+      if (!config || config.nil?)
+        results[:message] = "Unable to load configuration settings from file (config/clientcredential_config.yml)"
+      else
+        begin
+          clientcredential_config = Adp::Connection::ClientCredentialConfiguration.new(config);
+
+          connection = Adp::Connection::ApiConnectionFactory::createConnection(clientcredential_config)
+
+          connection.connect();
+
+          if (!connection.is_connected_indicator?)
+            results[:message] = "Error attempting to establish a connection"
+            Log.error "Not connected"
+          else
+            Log.debug("Connected and ready for getting data");
+            session["ClientCredential"] = connection;
+          end
+        end
+      end
+    end
+    erb :client_credentials, :locals => { :view_bag => results }
+  end
+
+end
+
+
+```
 
 
 ## Contributing
