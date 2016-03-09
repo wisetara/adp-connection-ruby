@@ -29,6 +29,8 @@ followed by
 ```sh
 
 $ cd adp-connection-ruby
+$ gem install bundler
+$ bundle install
 $ rake -T
 $ rake install:local
 
@@ -39,6 +41,7 @@ $ rake install:local
 ```sh
 
 $ cd ./democlient
+$ bundle install
 $ rackup
 
 ```
@@ -61,8 +64,8 @@ gem 'adp-connection'
 And then execute:
 
 ```sh
-
-    $ bundle
+    
+    $ bundle install
 
 ```
 
