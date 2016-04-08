@@ -6,6 +6,7 @@ module Adp
       attr_accessor :clientID
       attr_accessor :clientSecret
       attr_accessor :sslCertPath
+      attr_accessor :sslCaPath
       attr_accessor :sslKeyPath
       attr_accessor :sslKeyPass
       attr_accessor :tokenServerURL
@@ -19,6 +20,7 @@ module Adp
         self.clientID = config["clientID"]
         self.clientSecret = config["clientSecret"]
         self.sslCertPath = config["sslCertPath"]
+        self.sslCaPath = config["sslCaPath"]
         self.sslKeyPath = config["sslKeyPath"]
         self.sslKeyPass = config["sslKeyPass"]
         self.tokenServerURL = config["tokenServerURL"]
