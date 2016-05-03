@@ -118,10 +118,12 @@ module Adp
           content_type ||= "application/x-www-form-urlencoded"
           method ||= 'POST'
 
-            Log.debug("URL: #{url}")
-            Log.debug("Client ID: #{data["client_id"]}")
-            Log.debug("Client Secret: #{data["client_secret"]}")
-            Log.debug("Grant Type: #{data["grant_type"]}")
+            log = Logger.new(STDOUT)
+            log.level = Logger::DEBUG
+            log.debug("URL: #{url}")
+            log.debug("Client ID: #{data["client_id"]}")
+            log.debug("Client Secret: #{data["client_secret"]}")
+            log.debug("Grant Type: #{data["grant_type"]}")
 
             uri = URI.parse( url );
             pem = File.read("#{self.connection_configuration.sslCertPath}");
