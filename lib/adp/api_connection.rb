@@ -144,7 +144,7 @@ module Adp
               request = Net::HTTP::Get.new(uri.request_uri)
             end
 
-            request.initialize_http_header({"User-Agent" => "adp-connection-ruby/1.0.1"})
+            request.initialize_http_header({"User-Agent" => "adp-connection-ruby/0.1.3"})
 
             request["Content-Type"] = content_type
 
