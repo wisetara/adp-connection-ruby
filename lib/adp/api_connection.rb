@@ -9,6 +9,7 @@ require_relative "connection_exception"
 require_relative "api_connection"
 require_relative "client_credential_configuration"
 require_relative "authorization_code_configuration"
+require_relative "connection/version"
 
 module Adp
   module Connection
@@ -125,10 +126,13 @@ module Adp
             log.debug("Client Secret: #{data["client_secret"]}")
             log.debug("Grant Type: #{data["grant_type"]}")
 
+            useragent = "adp-connection-ruby/#{Adp::Connection::VERSION}"
             uri = URI.parse( url );
             pem = File.read("#{self.connection_configuration.sslCertPath}");
             key = File.read(self.connection_configuration.sslKeyPath);
             http = Net::HTTP.new(uri.host, uri.port);
+
+            log.debug("User agent: #{useragent}")
 
             if (!self.connection_configuration.sslCertPath.nil?)
                 http.use_ssl = true
@@ -144,7 +148,7 @@ module Adp
               request = Net::HTTP::Get.new(uri.request_uri)
             end
 
-            request.initialize_http_header({"User-Agent" => "adp-connection-ruby/0.1.3"})
+            request.initialize_http_header({"User-Agent" => useragent })
 
             request["Content-Type"] = content_type
 
