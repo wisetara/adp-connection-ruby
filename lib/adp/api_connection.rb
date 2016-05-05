@@ -129,6 +129,7 @@ module Adp
             pem = File.read("#{self.connection_configuration.sslCertPath}");
             key = File.read(self.connection_configuration.sslKeyPath);
             http = Net::HTTP.new(uri.host, uri.port);
+
             if (!self.connection_configuration.sslCertPath.nil?)
                 http.use_ssl = true
                 http.cert = OpenSSL::X509::Certificate.new( pem );
@@ -142,6 +143,8 @@ module Adp
             else
               request = Net::HTTP::Get.new(uri.request_uri)
             end
+
+            request.initialize_http_header({"User-Agent" => "adp-connection-ruby/1.0.1"})
 
             request["Content-Type"] = content_type
 
