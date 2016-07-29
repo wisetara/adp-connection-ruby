@@ -1,6 +1,7 @@
 clientID:              ec762f06-7410-4f6d-aa82-969902c1836a
 clientSecret:          6daf2cd7-4604-46c0-ab43-a645a6571d34
 sslCertPath:           config/certs/apiclient_iat.pem
+sslCaPath:             config/certs/apiclient_iat_chain.pem
 sslKeyPath:            config/certs/apiclient_iat.key
 sslKeyPass:            adpadp10
 tokenServerURL:        https://iat-api.adp.com/auth/oauth/v2/token
