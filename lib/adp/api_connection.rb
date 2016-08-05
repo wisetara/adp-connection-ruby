@@ -28,7 +28,7 @@ module Adp
         def connect
 
             if self.connection_configuration.nil?
-                raise ADPConnectionException, "Configuration is empty or not found"
+                raise ConnectionException, "Configuration is empty or not found"
             end
 
             self.access_token = get_access_token()
@@ -58,19 +58,19 @@ module Adp
             if is_connected_indicator?
 
                 if self.connection_configuration.nil?
-                    raise ADPConnectionException, "Config error: Configuration is empty or not found"
+                    raise ConnectionException, "Config error: Configuration is empty or not found"
                 end
                 if (self.connection_configuration.grantType.nil?)
-                    raise ADPConnectionException, "Config error: Grant Type is empty or not known"
+                    raise ConnectionException, "Config error: Grant Type is empty or not known"
                 end
                 if (self.connection_configuration.tokenServerURL.nil?)
-                    raise ADPConnectionException, "Config error: tokenServerURL is empty or not known"
+                    raise ConnectionException, "Config error: tokenServerURL is empty or not known"
                 end
                 if (self.connection_configuration.clientID.nil?)
-                    raise ADPConnectionException, "Config error: clientID is empty or not known"
+                    raise ConnectionException, "Config error: clientID is empty or not known"
                 end
                 if (self.connection_configuration.clientSecret.nil?)
-                    raise ADPConnectionException, "Config error: clientSecret is empty or not known"
+                    raise ConnectionException, "Config error: clientSecret is empty or not known"
                 end
             end
 
@@ -85,7 +85,7 @@ module Adp
             if result["error"].nil? then
               token = AccessToken.new(result)
             else
-              raise ADPConnectionException, "Connection error: #{result['error_description']}"
+              raise ConnectionException, "Connection error: #{result['error_description']}"
             end
 
            token
@@ -94,7 +94,7 @@ module Adp
         # @return [Object]
         def get_adp_data(product_url)
 
-            raise ADPConnectionException, "Connection error: can't get data, not connected" if (self.access_token.nil? || !is_connected_indicator?)
+            raise ConnectionException, "Connection error: can't get data, not connected" if (self.access_token.nil? || !is_connected_indicator?)
 
             authorization = "#{self.access_token.token_type} #{self.access_token.token}"
 
@@ -108,7 +108,7 @@ module Adp
 
             data = send_web_request(product_url, data, authorization, 'application/json', 'GET')
 
-            raise ADPConnectionException, "Connection error: #{data['error']}, #{data['error_description']}" unless data["error"].nil?
+            raise ConnectionException, "Connection error: #{data['error']}, #{data['error_description']}" unless data["error"].nil?
 
             return data
         end

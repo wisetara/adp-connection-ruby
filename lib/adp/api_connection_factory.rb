@@ -23,7 +23,7 @@ module Adp
             when "ClientCredentialConfiguration"
               return  ClientCredentialConnection.new(connectionCfg)
             else
-              raise ADPConnectionException, "Grant type / Configuration type not implemented. #{connectionCfg.grantType}"
+              raise ConnectionException, "Grant type / Configuration type not implemented. #{connectionCfg.grantType}"
           end
         end
       end
