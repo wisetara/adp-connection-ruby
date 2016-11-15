@@ -35,7 +35,7 @@ module Adp
         end
 
         def disconnect
-            self.access_token = null;
+            self.access_token = nil
         end
 
         # @return [Boolean]
