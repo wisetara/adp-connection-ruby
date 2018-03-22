@@ -6,8 +6,8 @@ require 'adp/connection/version'
 Gem::Specification.new do |spec|
   spec.name          = "adp-connection"
   spec.version       = Adp::Connection::VERSION
-  spec.authors       = ["Napier, Junior (CORP)"]
-  spec.email         = ["JuniorNapier@GMail.com"]
+  spec.authors       = ["ADP Marketplace"]
+  spec.email         = ["richard.smith@adp.com"]
   # spec.owners        = ["ADP Marketplace, ADP Inc."]
 
   spec.summary       = %q{A library for Ruby that help applications connect to the ADP API Gateway.}
