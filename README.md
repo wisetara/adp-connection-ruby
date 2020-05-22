@@ -29,7 +29,7 @@ followed by
 ```sh
 
 $ cd adp-connection-ruby
-$ gem install bundler
+$ gem install bundler -v 1.11.2
 $ bundle install
 $ rake -T
 $ rake install:local
